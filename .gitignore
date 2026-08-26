@@ -1,0 +1,19 @@
+# Java
+target/
+*.class
+
+# Spring Boot
+*.log
+
+# Environment
+.env
+
+# Node
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
