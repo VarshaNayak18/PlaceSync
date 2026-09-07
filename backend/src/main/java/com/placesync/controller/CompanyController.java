@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/companies")
+@PreAuthorize("hasRole('ADMIN')")
 public class CompanyController {
 
     private final CompanyService companyService;
@@ -52,5 +53,23 @@ public class CompanyController {
         return ResponseEntity.ok(
                 companyService.getAllCompanies()
         );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<CompanyResponse> updateCompany(
+        @PathVariable Long id,
+        @Valid @RequestBody CompanyRequest request
+    ) {        
+        return ResponseEntity.ok(
+            companyService.updateCompany(id, request)
+        );
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCompany(
+        @PathVariable Long id
+    ) {
+        companyService.deleteCompany(id);
+        return ResponseEntity.noContent().build();
     }
 }

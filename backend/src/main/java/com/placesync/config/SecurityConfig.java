@@ -34,20 +34,22 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
-                )
+        .requestMatchers("/api/auth/**", "/error")
+        .permitAll()
+        .anyRequest()
+        .authenticated()
+)
+
                 .exceptionHandling(exception ->
-                        exception.authenticationEntryPoint(
-                                (request, response, authException) ->
-                                        response.sendError(
-                                                HttpServletResponse.SC_UNAUTHORIZED,
-                                                "Unauthorized"
-                                        )
+        exception.authenticationEntryPoint(
+                (request, response, authException) ->
+                        response.sendError(
+                                HttpServletResponse.SC_UNAUTHORIZED,
+                                "Unauthorized"
                         )
-                )
+        )
+)
+)
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class

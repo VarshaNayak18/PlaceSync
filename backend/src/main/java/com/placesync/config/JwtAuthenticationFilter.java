@@ -74,7 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception exception) {
-            exception.printStackTrace();
+            // Invalid JWT - request continues without authentication.
         }
 
         filterChain.doFilter(request, response);

@@ -68,4 +68,42 @@ public class CompanyServiceImpl implements CompanyService {
                 .contactEmail(company.getContactEmail())
                 .build();
     }
+
+    @Override
+public CompanyResponse updateCompany(
+        Long id,
+        CompanyRequest request
+) {
+
+    Company company = companyRepository.findById(id)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Company not found with id: " + id
+                    )
+            );
+
+    company.setName(request.getName());
+    company.setIndustry(request.getIndustry());
+    company.setLocation(request.getLocation());
+    company.setWebsite(request.getWebsite());
+    company.setContactEmail(request.getContactEmail());
+
+    Company updatedCompany =
+            companyRepository.save(company);
+
+    return mapToResponse(updatedCompany);
+}
+
+@Override
+public void deleteCompany(Long id) {
+
+    Company company = companyRepository.findById(id)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Company not found with id: " + id
+                    )
+            );
+
+    companyRepository.delete(company);
+}
 }
