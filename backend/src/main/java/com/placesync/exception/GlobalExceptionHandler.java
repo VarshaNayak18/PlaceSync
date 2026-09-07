@@ -56,4 +56,36 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST
         );
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+public ResponseEntity<ErrorResponse> handleUnauthorizedException(
+        UnauthorizedException exception
+) {
+    ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.UNAUTHORIZED.value())
+            .message(exception.getMessage())
+            .build();
+
+    return new ResponseEntity<>(
+            errorResponse,
+            HttpStatus.UNAUTHORIZED
+    );
+}
+
+@ExceptionHandler(ConflictException.class)
+public ResponseEntity<ErrorResponse> handleConflictException(
+        ConflictException exception
+) {
+    ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.CONFLICT.value())
+            .message(exception.getMessage())
+            .build();
+
+    return new ResponseEntity<>(
+            errorResponse,
+            HttpStatus.CONFLICT
+    );
+}
 }
