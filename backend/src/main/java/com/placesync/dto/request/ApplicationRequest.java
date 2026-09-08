@@ -1,0 +1,15 @@
+package com.placesync.dto.request;
+
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ApplicationRequest {
+
+    @NotNull(message = "Job ID is required")
+    private Long jobId;
+}

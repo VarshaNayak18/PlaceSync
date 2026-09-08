@@ -88,4 +88,20 @@ public ResponseEntity<ErrorResponse> handleConflictException(
             HttpStatus.CONFLICT
     );
 }
+
+@ExceptionHandler(IllegalStateException.class)
+public ResponseEntity<ErrorResponse> handleIllegalStateException(
+        IllegalStateException exception
+) {
+    ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.BAD_REQUEST.value())
+            .message(exception.getMessage())
+            .build();
+
+    return new ResponseEntity<>(
+            errorResponse,
+            HttpStatus.BAD_REQUEST
+    );
+}
 }
