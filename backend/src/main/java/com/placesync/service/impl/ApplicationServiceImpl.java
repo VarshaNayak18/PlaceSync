@@ -2,6 +2,7 @@ package com.placesync.service.impl;
 
 import com.placesync.dto.request.ApplicationRequest;
 import com.placesync.dto.response.ApplicationResponse;
+import com.placesync.dto.response.EligibilityResult;
 import com.placesync.entity.Application;
 import com.placesync.entity.Company;
 import com.placesync.entity.Job;
@@ -12,6 +13,7 @@ import com.placesync.repository.ApplicationRepository;
 import com.placesync.repository.JobRepository;
 import com.placesync.repository.StudentRepository;
 import com.placesync.service.ApplicationService;
+import com.placesync.service.EligibilityService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,15 +25,18 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final StudentRepository studentRepository;
     private final JobRepository jobRepository;
+    private final EligibilityService eligibilityService;
 
     public ApplicationServiceImpl(
             ApplicationRepository applicationRepository,
             StudentRepository studentRepository,
-            JobRepository jobRepository
+            JobRepository jobRepository,
+            EligibilityService eligibilityService
     ) {
         this.applicationRepository = applicationRepository;
         this.studentRepository = studentRepository;
         this.jobRepository = jobRepository;
+        this.eligibilityService = eligibilityService;
     }
 
     @Override
@@ -56,27 +61,17 @@ public class ApplicationServiceImpl implements ApplicationService {
                         )
                 );
 
-        if (job.getApplicationDeadline().isBefore(
-                java.time.LocalDate.now()
-        )) {
-            throw new IllegalStateException(
-                    "Application deadline has passed"
-            );
-        }
+        EligibilityResult eligibilityResult =
+        eligibilityService.checkEligibility(student, job);
 
-        if (student.getCgpa() < job.getMinimumCgpa()) {
-            throw new IllegalStateException(
-                    "Student does not meet the minimum CGPA requirement"
-            );
-        }
-
-        if (!student.getDepartment().equalsIgnoreCase(
-                job.getEligibleDepartment()
-        )) {
-            throw new IllegalStateException(
-                    "Student's department is not eligible for this job"
-            );
-        }
+if (!eligibilityResult.isEligible()) {
+    throw new IllegalStateException(
+            String.join(
+                    "; ",
+                    eligibilityResult.getReasons()
+            )
+    );
+}
 
         if (applicationRepository.existsByStudentIdAndJobId(
                 student.getId(),
