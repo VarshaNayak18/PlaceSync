@@ -25,4 +25,6 @@ public interface ApplicationRepository
             Long studentId,
             Long jobId
     );
+
+    long countByStatus(ApplicationStatus status);
 }

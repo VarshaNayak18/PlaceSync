@@ -15,4 +15,7 @@ public interface InterviewRepository
     List<Interview> findByStatus(InterviewStatus status);
 
     boolean existsByApplicationId(Long applicationId);
+
+    long countByStatus(InterviewStatus status);
+
 }
