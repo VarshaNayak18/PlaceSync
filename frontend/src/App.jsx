@@ -3,15 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
-
-function StudentDashboard() {
-  return (
-    <>
-      <Navbar />
-      <h1>Student Dashboard</h1>
-    </>
-  );
-}
+import StudentDashboard from "./pages/StudentDashboard";
 
 function AdminDashboard() {
   return (

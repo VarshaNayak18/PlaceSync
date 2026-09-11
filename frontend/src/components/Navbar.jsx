@@ -11,22 +11,62 @@ function Navbar() {
   };
 
   return (
-    <nav>
+  <nav
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "16px 24px",
+      backgroundColor: "#ffffff",
+      borderBottom: "1px solid #e5e7eb",
+      marginBottom: "24px",
+    }}
+  >
+    <div>
       <h2>PlaceSync</h2>
+    </div>
 
-      {user && (
+    {user && (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "16px",
+        }}
+      >
         <div>
-          <span>
-            Welcome, {user.name}
-          </span>
+          <strong>{user.name}</strong>
 
-          <button onClick={handleLogout}>
-            Logout
-          </button>
+          <span
+            style={{
+              marginLeft: "8px",
+              fontSize: "13px",
+              color: "#6b7280",
+            }}
+          >
+            ({user.role})
+          </span>
         </div>
-      )}
-    </nav>
-  );
+
+        <button
+          onClick={() => {
+            if (user.role === "ADMIN") {
+              navigate("/admin/dashboard");
+            } else {
+              navigate("/student/dashboard");
+            }
+          }}
+        >
+          Dashboard
+        </button>
+
+        <button onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+    )}
+  </nav>
+);
 }
 
 export default Navbar;
