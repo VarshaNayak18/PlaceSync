@@ -2,17 +2,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Navbar from "./components/Navbar";
 import StudentDashboard from "./pages/StudentDashboard";
-
-function AdminDashboard() {
-  return (
-    <>
-      <Navbar />
-      <h1>Admin Dashboard</h1>
-    </>
-  );
-}
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (

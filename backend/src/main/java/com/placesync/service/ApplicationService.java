@@ -22,4 +22,6 @@ public interface ApplicationService {
             Long id,
             String status
     );
+
+    List<ApplicationResponse> getAllApplications();
 }

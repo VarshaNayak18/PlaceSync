@@ -145,6 +145,15 @@ if (!eligibilityResult.isEligible()) {
     }
 
     @Override
+public List<ApplicationResponse> getAllApplications() {
+
+    return applicationRepository.findAll()
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+
+    @Override
     public ApplicationResponse updateApplicationStatus(
             Long id,
             String status

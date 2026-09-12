@@ -54,6 +54,15 @@ public class ApplicationController {
         );
     }
 
+    @GetMapping
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<List<ApplicationResponse>> getAllApplications() {
+
+    return ResponseEntity.ok(
+            applicationService.getAllApplications()
+    );
+}
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApplicationResponse> getApplicationById(
