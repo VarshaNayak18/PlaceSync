@@ -187,6 +187,40 @@ public List<ApplicationResponse> getAllApplications() {
         return mapToResponse(updatedApplication);
     }
 
+    @Override
+public List<ApplicationResponse> getRecruiterApplications(Long companyId) {
+    return applicationRepository.findAll()
+            .stream()
+            .filter(application ->
+                    application.getJob().getCompany().getId().equals(companyId))
+            .map(this::mapToResponse)
+            .toList();
+}
+
+@Override
+public ApplicationResponse updateRecruiterApplicationStatus(
+        Long companyId,
+        Long applicationId,
+        ApplicationStatus status
+) {
+    Application application = applicationRepository.findById(applicationId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                    "Application not found with id: " + applicationId
+            ));
+
+    if (!application.getJob().getCompany().getId().equals(companyId)) {
+        throw new ResourceNotFoundException(
+                "Application does not belong to your company"
+        );
+    }
+
+    application.setStatus(status);
+
+    Application updatedApplication = applicationRepository.save(application);
+
+    return mapToResponse(updatedApplication);
+}
+
     private ApplicationResponse mapToResponse(
             Application application
     ) {

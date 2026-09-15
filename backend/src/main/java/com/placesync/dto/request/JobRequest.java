@@ -38,6 +38,5 @@ public class JobRequest {
     @Future(message = "Application deadline must be in the future")
     private LocalDate applicationDeadline;
 
-    @NotNull(message = "Company ID is required")
     private Long companyId;
 }

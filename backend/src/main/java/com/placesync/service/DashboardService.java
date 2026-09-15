@@ -5,4 +5,6 @@ import com.placesync.dto.response.DashboardResponse;
 public interface DashboardService {
 
     DashboardResponse getAdminDashboard();
+
+    DashboardResponse getRecruiterDashboard(Long companyId);
 }

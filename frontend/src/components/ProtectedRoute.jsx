@@ -13,6 +13,10 @@ function ProtectedRoute({ children, allowedRole }) {
       return <Navigate to="/admin/dashboard" replace />;
     }
 
+    if (user?.role === "RECRUITER") {
+      return <Navigate to="/recruiter/dashboard" replace />;
+    }
+
     return <Navigate to="/student/dashboard" replace />;
   }
 

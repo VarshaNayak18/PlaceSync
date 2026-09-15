@@ -7,3 +7,9 @@ export const getAdminDashboard = async () => {
 
   return response.data;
 };
+
+
+export const getRecruiterDashboard = async () => {
+    const response = await api.get("/recruiter/dashboard");
+    return response.data;
+};

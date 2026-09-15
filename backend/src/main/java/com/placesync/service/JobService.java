@@ -18,4 +18,12 @@ public interface JobService {
     JobResponse updateJob(Long id, JobRequest request);
 
     void deleteJob(Long id);
+
+    List<JobResponse> getRecruiterJobs(Long companyId);
+    
+    JobResponse createRecruiterJob(Long companyId, JobRequest request);
+    
+    JobResponse updateRecruiterJob(Long companyId, Long jobId, JobRequest request);
+    
+    void deleteRecruiterJob(Long companyId, Long jobId);
 }

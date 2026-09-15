@@ -70,4 +70,35 @@ public class DashboardServiceImpl implements DashboardService {
                 )
                 .build();
     }
+
+    @Override
+public DashboardResponse getRecruiterDashboard(Long companyId) {
+
+    long totalJobs =
+            jobRepository.countByCompanyId(companyId);
+
+    long totalApplications =
+            applicationRepository.countByJobCompanyId(companyId);
+
+    long totalSelected =
+            applicationRepository.countByJobCompanyIdAndStatus(
+                    companyId,
+                    ApplicationStatus.SELECTED
+            );
+
+    long totalScheduledInterviews =
+            interviewRepository.countByApplicationJobCompanyIdAndStatus(
+                    companyId,
+                    InterviewStatus.SCHEDULED
+            );
+
+    return DashboardResponse.builder()
+            .totalJobs(totalJobs)
+            .totalApplications(totalApplications)
+            .totalSelected(totalSelected)
+            .totalScheduledInterviews(
+                    totalScheduledInterviews
+            )
+            .build();
+}
 }

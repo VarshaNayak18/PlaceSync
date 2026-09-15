@@ -27,4 +27,11 @@ public interface ApplicationRepository
     );
 
     long countByStatus(ApplicationStatus status);
+
+    long countByJobCompanyId(Long companyId);
+    
+    long countByJobCompanyIdAndStatus(
+        Long companyId,
+        ApplicationStatus status
+);
 }

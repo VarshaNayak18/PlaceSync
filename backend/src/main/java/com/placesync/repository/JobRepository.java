@@ -10,4 +10,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByCompanyId(Long companyId);
 
     List<Job> findByEligibleDepartment(String eligibleDepartment);
+
+    long countByCompanyId(Long companyId);
 }

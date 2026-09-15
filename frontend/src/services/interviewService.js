@@ -21,3 +21,23 @@ export const updateInterviewStatus = async (id, status) => {
 export const cancelInterview = async (id) => {
   await api.put(`/interviews/${id}/cancel`);
 };
+
+export const getRecruiterInterviews = async () => {
+    const response = await api.get("/recruiter/interviews");
+    return response.data;
+};
+
+export const scheduleRecruiterInterview = async (interviewData) => {
+    const response = await api.post(
+        "/recruiter/interviews",
+        interviewData
+    );
+    return response.data;
+};
+
+export const updateRecruiterInterviewStatus = async (id, status) => {
+    const response = await api.put(
+        `/recruiter/interviews/${id}/status?status=${status}`
+    );
+    return response.data;
+};

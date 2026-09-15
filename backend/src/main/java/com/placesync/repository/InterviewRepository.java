@@ -18,4 +18,9 @@ public interface InterviewRepository
 
     long countByStatus(InterviewStatus status);
 
+    long countByApplicationJobCompanyIdAndStatus(
+        Long companyId,
+        InterviewStatus status
+);
+
 }

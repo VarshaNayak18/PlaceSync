@@ -140,6 +140,101 @@ public class JobServiceImpl implements JobService {
         jobRepository.delete(job);
     }
 
+    @Override
+public List<JobResponse> getRecruiterJobs(Long companyId) {
+
+    return jobRepository.findByCompanyId(companyId)
+            .stream()
+            .map(this::mapToResponse)
+            .toList();
+}
+
+@Override
+public JobResponse createRecruiterJob(
+        Long companyId,
+        JobRequest request
+) {
+
+    Company company = companyRepository.findById(companyId)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Company not found with id: " + companyId
+                    )
+            );
+
+    Job job = Job.builder()
+            .title(request.getTitle())
+            .description(request.getDescription())
+            .location(request.getLocation())
+            .salary(request.getSalary())
+            .minimumCgpa(request.getMinimumCgpa())
+            .eligibleDepartment(request.getEligibleDepartment())
+            .requiredSkills(request.getRequiredSkills())
+            .applicationDeadline(request.getApplicationDeadline())
+            .company(company)
+            .build();
+
+    Job savedJob = jobRepository.save(job);
+
+    return mapToResponse(savedJob);
+}
+
+@Override
+public JobResponse updateRecruiterJob(
+        Long companyId,
+        Long jobId,
+        JobRequest request
+) {
+
+    Job job = jobRepository.findById(jobId)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Job not found with id: " + jobId
+                    )
+            );
+
+    if (!job.getCompany().getId().equals(companyId)) {
+        throw new ResourceNotFoundException(
+                "Job does not belong to your company"
+        );
+    }
+
+    job.setTitle(request.getTitle());
+    job.setDescription(request.getDescription());
+    job.setLocation(request.getLocation());
+    job.setSalary(request.getSalary());
+    job.setMinimumCgpa(request.getMinimumCgpa());
+    job.setEligibleDepartment(request.getEligibleDepartment());
+    job.setRequiredSkills(request.getRequiredSkills());
+    job.setApplicationDeadline(request.getApplicationDeadline());
+
+    Job updatedJob = jobRepository.save(job);
+
+    return mapToResponse(updatedJob);
+}
+
+@Override
+public void deleteRecruiterJob(
+        Long companyId,
+        Long jobId
+) {
+
+    Job job = jobRepository.findById(jobId)
+            .orElseThrow(() ->
+                    new ResourceNotFoundException(
+                            "Job not found with id: " + jobId
+                    )
+            );
+
+    if (!job.getCompany().getId().equals(companyId)) {
+        throw new ResourceNotFoundException(
+                "Job does not belong to your company"
+        );
+    }
+
+    jobRepository.delete(job);
+}
+
     private JobResponse mapToResponse(Job job) {
 
         return JobResponse.builder()

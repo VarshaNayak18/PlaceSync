@@ -2,6 +2,7 @@ package com.placesync.service;
 
 import com.placesync.dto.request.ApplicationRequest;
 import com.placesync.dto.response.ApplicationResponse;
+import com.placesync.enums.ApplicationStatus;
 
 import java.util.List;
 
@@ -24,4 +25,12 @@ public interface ApplicationService {
     );
 
     List<ApplicationResponse> getAllApplications();
+
+    List<ApplicationResponse> getRecruiterApplications(Long companyId);
+    
+    ApplicationResponse updateRecruiterApplicationStatus(
+        Long companyId,
+        Long applicationId,
+        ApplicationStatus status
+);
 }

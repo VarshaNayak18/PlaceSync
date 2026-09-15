@@ -26,4 +26,17 @@ public interface InterviewService {
     );
 
     void cancelInterview(Long id);
+
+    List<InterviewResponse> getRecruiterInterviews(Long companyId);
+    
+    InterviewResponse scheduleRecruiterInterview(
+        Long companyId,
+        InterviewRequest request
+);
+
+InterviewResponse updateRecruiterInterviewStatus(
+        Long companyId,
+        Long interviewId,
+        InterviewStatus status
+);
 }

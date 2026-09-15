@@ -22,3 +22,15 @@ export const updateApplicationStatus = async (id, status) => {
 
   return response.data;
 };
+
+export const getRecruiterApplications = async () => {
+    const response = await api.get("/recruiter/applications");
+    return response.data;
+};
+
+export const updateRecruiterApplicationStatus = async (id, status) => {
+    const response = await api.put(
+        `/recruiter/applications/${id}/status?status=${status}`
+    );
+    return response.data;
+};

@@ -44,3 +44,22 @@ export const updateJob = async (
 export const deleteJob = async (id) => {
   await api.delete(`/jobs/${id}`);
 };
+
+export const getRecruiterJobs = async () => {
+    const response = await api.get("/recruiter/jobs");
+    return response.data;
+};
+
+export const createRecruiterJob = async (jobData) => {
+    const response = await api.post("/recruiter/jobs", jobData);
+    return response.data;
+};
+
+export const updateRecruiterJob = async (id, jobData) => {
+    const response = await api.put(`/recruiter/jobs/${id}`, jobData);
+    return response.data;
+};
+
+export const deleteRecruiterJob = async (id) => {
+    await api.delete(`/recruiter/jobs/${id}`);
+};

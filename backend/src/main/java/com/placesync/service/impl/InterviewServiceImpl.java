@@ -159,6 +159,80 @@ public class InterviewServiceImpl implements InterviewService {
         interviewRepository.save(interview);
     }
 
+    @Override
+public List<InterviewResponse> getRecruiterInterviews(Long companyId) {
+    return interviewRepository.findAll()
+            .stream()
+            .filter(interview ->
+                    interview.getApplication()
+                            .getJob()
+                            .getCompany()
+                            .getId()
+                            .equals(companyId))
+            .map(this::mapToResponse)
+            .toList();
+}
+
+@Override
+public InterviewResponse scheduleRecruiterInterview(
+        Long companyId,
+        InterviewRequest request
+) {
+    Application application = applicationRepository.findById(
+            request.getApplicationId()
+    ).orElseThrow(() -> new ResourceNotFoundException(
+            "Application not found with id: " + request.getApplicationId()
+    ));
+
+    if (!application.getJob().getCompany().getId().equals(companyId)) {
+        throw new ResourceNotFoundException(
+                "Application does not belong to your company"
+        );
+    }
+
+    Interview interview = Interview.builder()
+        .application(application)
+        .interviewDateTime(request.getInterviewDateTime())
+        .mode(request.getMode())
+        .meetingLink(request.getMeetingLink())
+        .interviewerName(request.getInterviewerName())
+        .status(InterviewStatus.SCHEDULED)
+        .build();
+
+    Interview savedInterview = interviewRepository.save(interview);
+
+    return mapToResponse(savedInterview);
+}
+
+@Override
+public InterviewResponse updateRecruiterInterviewStatus(
+        Long companyId,
+        Long interviewId,
+        InterviewStatus status
+) {
+    Interview interview = interviewRepository.findById(interviewId)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                    "Interview not found with id: " + interviewId
+            ));
+
+    if (!interview.getApplication()
+            .getJob()
+            .getCompany()
+            .getId()
+            .equals(companyId)) {
+
+        throw new ResourceNotFoundException(
+                "Interview does not belong to your company"
+        );
+    }
+
+    interview.setStatus(status);
+
+    Interview updatedInterview = interviewRepository.save(interview);
+
+    return mapToResponse(updatedInterview);
+}
+
     private InterviewResponse mapToResponse(
             Interview interview
     ) {
