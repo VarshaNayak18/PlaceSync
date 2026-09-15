@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import { getAdminDashboard } from "../services/dashboardService";
 import StatCard from "../components/StatCard";
 import {
@@ -683,8 +682,6 @@ useEffect(() => {
 
   return (
     <>
-      <Navbar />
-
       <main 
       className="admin-dashboard"
   style={{

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import {
   getStudentProfile,
   updateStudentProfile,
@@ -300,8 +299,6 @@ const handleApply = async (jobId) => {
 
   return (
     <>
-      <Navbar />
-
       <main
   style={{
     maxWidth: "1100px",
