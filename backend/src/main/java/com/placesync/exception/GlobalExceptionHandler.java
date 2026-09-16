@@ -104,4 +104,20 @@ public ResponseEntity<ErrorResponse> handleIllegalStateException(
             HttpStatus.BAD_REQUEST
     );
 }
+
+@ExceptionHandler(Exception.class)
+public ResponseEntity<ErrorResponse> handleGenericException(
+        Exception exception
+) {
+    ErrorResponse errorResponse = ErrorResponse.builder()
+            .timestamp(LocalDateTime.now())
+            .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
+            .message("An unexpected error occurred")
+            .build();
+
+    return new ResponseEntity<>(
+            errorResponse,
+            HttpStatus.INTERNAL_SERVER_ERROR
+    );
+}
 }

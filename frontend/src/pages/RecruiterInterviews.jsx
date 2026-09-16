@@ -92,31 +92,28 @@ const handleSubmit = async (event) => {
 }, []);;
 
     const handleStatusChange = async (id, status) => {
-        try {
-            const updatedInterview =
-                await updateRecruiterInterviewStatus(id, status);
+    setStatusUpdatingId(id);
+    setError("");
 
-            setInterviews((previous) =>
-                previous.map((interview) =>
-                    interview.id === id
-                        ? updatedInterview
-                        : interview
-                )
-            );
+    try {
+        const updatedInterview =
+            await updateRecruiterInterviewStatus(id, status);
 
-        } catch (err) {
-            console.error(err);
-            setError("Failed to update interview status.");
-        }
-    };
+        setInterviews((previous) =>
+            previous.map((interview) =>
+                interview.id === id
+                    ? updatedInterview
+                    : interview
+            )
+        );
 
-    if (loading) {
-        return <p>Loading interviews...</p>;
+    } catch (err) {
+        console.error(err);
+        setError("Failed to update interview status.");
+    } finally {
+        setStatusUpdatingId(null);
     }
-
-    if (error && interviews.length === 0) {
-        return <p>{error}</p>;
-    }
+};
 
     return (
         <div className="recruiter-jobs-page">
@@ -329,30 +326,36 @@ const handleSubmit = async (event) => {
                                 {interview.status === "SCHEDULED" && (
                                     <>
                                         <button
-                                            type="button"
-                                            className="recruiter-primary-button"
-                                            onClick={() =>
-                                                handleStatusChange(
-                                                    interview.id,
-                                                    "COMPLETED"
-                                                )
-                                            }
-                                        >
-                                            Mark Completed
-                                        </button>
+    type="button"
+    className="recruiter-primary-button"
+    onClick={() =>
+        handleStatusChange(
+            interview.id,
+            "COMPLETED"
+        )
+    }
+    disabled={statusUpdatingId === interview.id}
+>
+    {statusUpdatingId === interview.id
+        ? "Updating..."
+        : "Mark Completed"}
+</button>
 
                                         <button
-                                            type="button"
-                                            className="recruiter-delete-button"
-                                            onClick={() =>
-                                                handleStatusChange(
-                                                    interview.id,
-                                                    "CANCELLED"
-                                                )
-                                            }
-                                        >
-                                            Cancel
-                                        </button>
+    type="button"
+    className="recruiter-delete-button"
+    onClick={() =>
+        handleStatusChange(
+            interview.id,
+            "CANCELLED"
+        )
+    }
+    disabled={statusUpdatingId === interview.id}
+>
+    {statusUpdatingId === interview.id
+        ? "Updating..."
+        : "Cancel"}
+</button>
                                     </>
                                 )}
 

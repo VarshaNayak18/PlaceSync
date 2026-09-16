@@ -20,6 +20,7 @@ function StatusBadge({ status }) {
     backgroundColor: "#fef3c7",
     color: "#92400e",
   },
+
   COMPLETED: {
     backgroundColor: "#dcfce7",
     color: "#166534",

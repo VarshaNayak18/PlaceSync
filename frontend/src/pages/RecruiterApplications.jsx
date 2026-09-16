@@ -9,6 +9,7 @@ function RecruiterApplications() {
     const [applications, setApplications] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [statusUpdatingId, setStatusUpdatingId] = useState(null);
 
     useEffect(() => {
         const loadApplications = async () => {
@@ -27,23 +28,28 @@ function RecruiterApplications() {
     }, []);
 
     const handleStatusChange = async (id, status) => {
-        try {
-            const updatedApplication =
-                await updateRecruiterApplicationStatus(id, status);
+    setStatusUpdatingId(id);
+    setError("");
 
-            setApplications((previous) =>
-                previous.map((application) =>
-                    application.id === id
-                        ? updatedApplication
-                        : application
-                )
-            );
+    try {
+        const updatedApplication =
+            await updateRecruiterApplicationStatus(id, status);
 
-        } catch (err) {
-            console.error(err);
-            setError("Failed to update application status.");
-        }
-    };
+        setApplications((previous) =>
+            previous.map((application) =>
+                application.id === id
+                    ? updatedApplication
+                    : application
+            )
+        );
+
+    } catch (err) {
+        console.error(err);
+        setError("Failed to update application status.");
+    } finally {
+        setStatusUpdatingId(null);
+    }
+};
 
     if (loading) {
         return <p>Loading applications...</p>;
@@ -118,60 +124,72 @@ function RecruiterApplications() {
     {application.status === "APPLIED" && (
         <>
             <button
-                type="button"
-                className="recruiter-edit-button"
-                onClick={() =>
-                    handleStatusChange(
-                        application.id,
-                        "SHORTLISTED"
-                    )
-                }
-            >
-                Shortlist
-            </button>
+    type="button"
+    className="recruiter-edit-button"
+    onClick={() =>
+        handleStatusChange(
+            application.id,
+            "SHORTLISTED"
+        )
+    }
+    disabled={statusUpdatingId === application.id}
+>
+    {statusUpdatingId === application.id
+        ? "Updating..."
+        : "Shortlist"}
+</button>
 
             <button
-                type="button"
-                className="recruiter-delete-button"
-                onClick={() =>
-                    handleStatusChange(
-                        application.id,
-                        "REJECTED"
-                    )
-                }
-            >
-                Reject
-            </button>
+    type="button"
+    className="recruiter-delete-button"
+    onClick={() =>
+        handleStatusChange(
+            application.id,
+            "REJECTED"
+        )
+    }
+    disabled={statusUpdatingId === application.id}
+>
+    {statusUpdatingId === application.id
+        ? "Updating..."
+        : "Reject"}
+</button>
         </>
     )}
 
     {application.status === "SHORTLISTED" && (
         <>
             <button
-                type="button"
-                className="recruiter-primary-button"
-                onClick={() =>
-                    handleStatusChange(
-                        application.id,
-                        "SELECTED"
-                    )
-                }
-            >
-                Select
-            </button>
+    type="button"
+    className="recruiter-primary-button"
+    onClick={() =>
+        handleStatusChange(
+            application.id,
+            "SELECTED"
+        )
+    }
+    disabled={statusUpdatingId === application.id}
+>
+    {statusUpdatingId === application.id
+        ? "Updating..."
+        : "Select"}
+</button>
 
             <button
-                type="button"
-                className="recruiter-delete-button"
-                onClick={() =>
-                    handleStatusChange(
-                        application.id,
-                        "REJECTED"
-                    )
-                }
-            >
-                Reject
-            </button>
+    type="button"
+    className="recruiter-delete-button"
+    onClick={() =>
+        handleStatusChange(
+            application.id,
+            "REJECTED"
+        )
+    }
+    disabled={statusUpdatingId === application.id}
+>
+    {statusUpdatingId === application.id
+        ? "Updating..."
+        : "Reject"}
+</button>
         </>
     )}
 

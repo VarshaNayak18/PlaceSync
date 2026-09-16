@@ -29,6 +29,7 @@ function RecruiterJobs() {
     const [submitting, setSubmitting] = useState(false);
 
     const [editingJobId, setEditingJobId] = useState(null);
+    const [deletingJobId, setDeletingJobId] = useState(null);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -67,6 +68,9 @@ const handleDelete = async (jobId) => {
         return;
     }
 
+    setDeletingJobId(jobId);
+    setError("");
+
     try {
         await deleteRecruiterJob(jobId);
 
@@ -77,6 +81,8 @@ const handleDelete = async (jobId) => {
     } catch (err) {
         console.error(err);
         setError("Failed to delete job.");
+    } finally {
+        setDeletingJobId(null);
     }
 };
 
@@ -387,12 +393,13 @@ const handleDelete = async (jobId) => {
     </button>
 
     <button
-        type="button"
-        className="recruiter-delete-button"
-        onClick={() => handleDelete(job.id)}
-    >
-        Delete
-    </button>
+    onClick={() => handleDelete(job.id)}
+    disabled={deletingJobId === job.id}
+>
+    {deletingJobId === job.id
+        ? "Deleting..."
+        : "Delete"}
+</button>
 
 </div>
 

@@ -14,6 +14,8 @@ function Login() {
 
   const [error, setError] = useState("");
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
 
@@ -24,32 +26,37 @@ function Login() {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+  event.preventDefault();
 
-    setError("");
+  setError("");
+  setLoading(true);
 
-    try {
-      const response = await api.post(
-        "/auth/login",
-        formData
-      );
+  try {
+    const response = await api.post(
+      "/auth/login",
+      formData
+    );
 
-      login(response.data);
+    login(response.data);
 
-      if (response.data.role === "ADMIN") {
-        navigate("/admin/dashboard");
-      } else {
-        navigate("/student/dashboard");
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-
-      setError(
-        error.response?.data?.message ||
-        "Login failed. Please check your credentials."
-      );
+    if (response.data.role === "ADMIN") {
+      navigate("/admin/dashboard");
+    } else if (response.data.role === "RECRUITER") {
+      navigate("/recruiter/dashboard");
+    } else {
+      navigate("/student/dashboard");
     }
-  };
+  } catch (error) {
+    console.error("Login failed:", error);
+
+    setError(
+      error.response?.data?.message ||
+      "Login failed. Please check your credentials."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div>
@@ -88,9 +95,12 @@ function Login() {
 
         <br />
 
-        <button type="submit">
-          Login
-        </button>
+        <button
+  type="submit"
+  disabled={loading}
+>
+  {loading ? "Logging in..." : "Login"}
+</button>
       </form>
     </div>
   );
