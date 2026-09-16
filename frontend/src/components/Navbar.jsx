@@ -10,81 +10,90 @@ function Navbar() {
     navigate("/login");
   };
 
+  const goToDashboard = () => {
+    if (user?.role === "ADMIN") {
+      navigate("/admin/dashboard");
+    } else if (user?.role === "RECRUITER") {
+      navigate("/recruiter/dashboard");
+    } else {
+      navigate("/student/dashboard");
+    }
+  };
+
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "16px 24px",
-        backgroundColor: "#ffffff",
-        borderBottom: "1px solid #e5e7eb",
-        marginBottom: "24px",
-      }}
-    >
-      <div>
-        <h2>PlaceSync</h2>
+    <nav className="navbar">
+      <div
+        className="navbar-brand"
+        onClick={goToDashboard}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            goToDashboard();
+          }
+        }}
+      >
+        <div className="navbar-logo">P</div>
+
+        <div className="navbar-brand-text">
+          <span className="navbar-title">PlaceSync</span>
+          <span className="navbar-subtitle">Campus Placement Platform</span>
+        </div>
       </div>
 
       {user && (
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "16px",
-          }}
-        >
-          <div>
-            <strong>{user.name}</strong>
+        <div className="navbar-content">
+          <div className="navbar-links">
+            {user.role === "RECRUITER" && (
+              <>
+                <button
+                  className="navbar-link"
+                  onClick={() => navigate("/recruiter/jobs")}
+                >
+                  Jobs
+                </button>
 
-            <span
-              style={{
-                marginLeft: "8px",
-                fontSize: "13px",
-                color: "#6b7280",
-              }}
+                <button
+                  className="navbar-link"
+                  onClick={() => navigate("/recruiter/applications")}
+                >
+                  Applications
+                </button>
+
+                <button
+                  className="navbar-link"
+                  onClick={() => navigate("/recruiter/interviews")}
+                >
+                  Interviews
+                </button>
+              </>
+            )}
+
+            <button
+              className="navbar-link"
+              onClick={goToDashboard}
             >
-              ({user.role})
-            </span>
+              Dashboard
+            </button>
           </div>
 
-          {user.role === "RECRUITER" && (
-            <>
-              <button
-                onClick={() => navigate("/recruiter/jobs")}
-              >
-                Jobs
-              </button>
+          <div className="navbar-divider" />
 
-              <button
-                onClick={() => navigate("/recruiter/applications")}
-              >
-                Applications
-              </button>
+          <div className="navbar-user">
+            <div className="navbar-avatar">
+              {user.name?.charAt(0)?.toUpperCase() || "U"}
+            </div>
 
-              <button
-                onClick={() => navigate("/recruiter/interviews")}
-              >
-                Interviews
-              </button>
-            </>
-          )}
+            <div className="navbar-user-info">
+              <strong>{user.name}</strong>
+              <span>{user.role}</span>
+            </div>
+          </div>
 
           <button
-            onClick={() => {
-              if (user.role === "ADMIN") {
-                navigate("/admin/dashboard");
-              } else if (user.role === "RECRUITER") {
-                navigate("/recruiter/dashboard");
-              } else {
-                navigate("/student/dashboard");
-              }
-            }}
+            className="navbar-logout"
+            onClick={handleLogout}
           >
-            Dashboard
-          </button>
-
-          <button onClick={handleLogout}>
             Logout
           </button>
         </div>

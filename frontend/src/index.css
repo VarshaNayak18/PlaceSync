@@ -1,29 +1,389 @@
+/* =========================================================
+   PlaceSync — Global Design System
+   ========================================================= */
+
+/* ---------- Design Tokens ---------- */
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #eff6ff;
+
+  --success: #16a34a;
+  --success-light: #f0fdf4;
+
+  --warning: #d97706;
+  --warning-light: #fffbeb;
+
+  --danger: #dc2626;
+  --danger-light: #fef2f2;
+
+  --info: #0284c7;
+  --info-light: #f0f9ff;
+
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-muted: #6b7280;
+
+  --background: #f8fafc;
+  --surface: #ffffff;
+
+  --border: #e5e7eb;
+  --border-light: #f1f5f9;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.10);
+
+  --transition: 0.2s ease;
+}
+
+
+/* ---------- Reset ---------- */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f5f7fa;
-  color: #1f2937;
+html {
+  scroll-behavior: smooth;
 }
 
-a {
-  text-decoration: none;
-  color: inherit;
+body {
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Arial,
+    sans-serif;
+
+  background: var(--background);
+  color: var(--text-primary);
+  line-height: 1.6;
 }
 
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
 }
 
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+/* ---------- Typography ---------- */
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 32px;
+  font-weight: 700;
+}
+
+h2 {
+  font-size: 22px;
+  font-weight: 650;
+}
+
+h3 {
+  font-size: 18px;
+  font-weight: 650;
+}
+
+p {
+  color: var(--text-secondary);
+}
+
+
+/* =========================================================
+   Reusable Buttons
+   ========================================================= */
+
+button {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  transition:
+    background var(--transition),
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+
+/* ---------- Button Variants ---------- */
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #f9fafb;
+}
+
+.btn-danger {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.btn-success {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #dcfce7;
+}
+
+
+/* =========================================================
+   Form Controls
+   ========================================================= */
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--text-primary);
+  outline: none;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #9ca3af;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Feedback Messages
+   ========================================================= */
+
+.success-message {
+  margin-bottom: 16px;
+  padding: 11px 14px;
+  border: 1px solid #bbf7d0;
+  border-radius: var(--radius-sm);
+  background: var(--success-light);
+  color: #166534;
+  font-size: 14px;
+}
+
+.error-message {
+  margin-bottom: 16px;
+  padding: 11px 14px;
+  border: 1px solid #fecaca;
+  border-radius: var(--radius-sm);
+  background: var(--danger-light);
+  color: #991b1b;
+  font-size: 14px;
+}
+
+.info-message {
+  margin-bottom: 16px;
+  padding: 11px 14px;
+  border: 1px solid #bae6fd;
+  border-radius: var(--radius-sm);
+  background: var(--info-light);
+  color: #075985;
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   Shared Cards
+   ========================================================= */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+
+/* =========================================================
+   Section Card
+   ========================================================= */
+
+.section-card {
+  margin-bottom: 24px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.section-card-header {
+  margin-bottom: 20px;
+}
+
+.section-card-header h2 {
+  margin-bottom: 4px;
+}
+
+.section-card-header p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   Status Badges
+   ========================================================= */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 5px 10px;
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+
+/* =========================================================
+   Stat Cards
+   ========================================================= */
+
+.stat-card {
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card-label {
+  margin-bottom: 6px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.stat-card-value {
+  color: var(--text-primary);
+  font-size: 30px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   Admin Dashboard
+   ========================================================= */
+
 .admin-dashboard {
-  max-width: 1100px;
+  width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 0 20px 40px;
+  padding: 24px 0 50px;
+}
+
+.admin-dashboard > h1 {
+  margin-bottom: 20px;
 }
 
 .admin-stats-grid {
@@ -34,35 +394,170 @@ input {
   width: 100%;
 }
 
-@media (max-width: 700px) {
-  .admin-dashboard {
-    padding: 0 12px 30px;
-  }
 
-  .application-filters {
-    grid-template-columns: 1fr !important;
-  }
+/* =========================================================
+   Admin Section Navigation
+   ========================================================= */
 
-  .admin-dashboard input,
-  .admin-dashboard select,
-  .admin-dashboard textarea {
-    width: 100%;
-    box-sizing: border-box;
-  }
+.admin-section-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
 
-  .admin-dashboard button {
-    max-width: 100%;
-  }
+  display: flex;
+  gap: 6px;
+
+  margin-bottom: 28px;
+  padding: 8px;
+
+  overflow-x: auto;
+
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+
+  backdrop-filter: blur(10px);
 }
 
-/* ================================
-   Recruiter Jobs
-   ================================ */
+.admin-section-nav button {
+  flex-shrink: 0;
+
+  padding: 8px 14px;
+
+  background: transparent;
+  color: var(--text-secondary);
+}
+
+.admin-section-nav button:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+
+/* =========================================================
+   Recruiter Dashboard
+   ========================================================= */
+
+.recruiter-dashboard {
+  width: min(1100px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 30px 0 50px;
+}
+
+.recruiter-dashboard-header {
+  margin-bottom: 30px;
+}
+
+.recruiter-dashboard-header h1 {
+  margin-bottom: 6px;
+}
+
+.recruiter-dashboard-header p {
+  color: var(--text-muted);
+}
+
+.recruiter-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.recruiter-stat-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 22px;
+
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.recruiter-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.recruiter-stat-icon {
+  font-size: 28px;
+}
+
+.recruiter-stat-card p {
+  margin-bottom: 5px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.recruiter-stat-card h2 {
+  font-size: 28px;
+}
+
+
+/* =========================================================
+   Recruiter Quick Actions
+   ========================================================= */
+
+.recruiter-quick-actions {
+  margin-top: 35px;
+}
+
+.recruiter-quick-actions h2 {
+  margin-bottom: 18px;
+}
+
+.recruiter-action-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.recruiter-action-grid a {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 22px;
+
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.recruiter-action-grid a:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.recruiter-action-grid strong {
+  font-size: 17px;
+}
+
+.recruiter-action-grid span {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+
+/* =========================================================
+   Recruiter Pages
+   ========================================================= */
 
 .recruiter-jobs-page {
-  max-width: 1100px;
+  width: min(1100px, calc(100% - 40px));
   margin: 0 auto;
-  padding: 30px 20px 50px;
+  padding: 30px 0 50px;
 }
 
 .recruiter-jobs-header {
@@ -78,24 +573,25 @@ input {
 }
 
 .recruiter-jobs-header p {
-  color: #6b7280;
+  color: var(--text-muted);
 }
 
 .recruiter-primary-button {
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   padding: 11px 18px;
-  background-color: #2563eb;
+  background: var(--primary);
   color: white;
   cursor: pointer;
   font-weight: 600;
 }
 
-.recruiter-primary-button:hover {
-  background-color: #1d4ed8;
+.recruiter-primary-button:hover:not(:disabled) {
+  background: var(--primary-dark);
 }
 
-/* Job list */
+
+/* ---------- Recruiter Cards ---------- */
 
 .recruiter-job-list {
   display: grid;
@@ -104,11 +600,20 @@ input {
 }
 
 .recruiter-job-card {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
   padding: 22px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+}
+
+.recruiter-job-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .recruiter-job-card h2 {
@@ -118,17 +623,19 @@ input {
 
 .recruiter-job-detail {
   margin: 8px 0;
-  color: #4b5563;
+  color: var(--text-secondary);
 }
 
 .recruiter-job-detail strong {
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
-/* Job actions */
+
+/* ---------- Recruiter Actions ---------- */
 
 .recruiter-job-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
 }
@@ -136,39 +643,40 @@ input {
 .recruiter-edit-button,
 .recruiter-delete-button {
   border: none;
-  border-radius: 7px;
+  border-radius: var(--radius-sm);
   padding: 9px 15px;
   cursor: pointer;
   font-weight: 600;
 }
 
 .recruiter-edit-button {
-  background-color: #e5e7eb;
-  color: #1f2937;
+  background: #f1f5f9;
+  color: var(--text-primary);
+}
+
+.recruiter-edit-button:hover:not(:disabled) {
+  background: #e2e8f0;
 }
 
 .recruiter-delete-button {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background: var(--danger-light);
+  color: var(--danger);
 }
 
-.recruiter-edit-button:hover {
-  background-color: #d1d5db;
+.recruiter-delete-button:hover:not(:disabled) {
+  background: #fee2e2;
 }
 
-.recruiter-delete-button:hover {
-  background-color: #fecaca;
-}
 
-/* Create / Edit form */
+/* ---------- Recruiter Form ---------- */
 
 .recruiter-job-form {
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 25px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 25px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
 }
 
 .recruiter-job-form h2 {
@@ -192,58 +700,128 @@ input {
 }
 
 .recruiter-form-group label {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.recruiter-form-group input,
-.recruiter-form-group textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 7px;
-  outline: none;
+  margin-bottom: 0;
 }
 
 .recruiter-form-group textarea {
-  min-height: 100px;
-  resize: vertical;
-}
-
-.recruiter-form-group input:focus,
-.recruiter-form-group textarea:focus {
-  border-color: #2563eb;
+  min-height: 120px;
 }
 
 .recruiter-form-actions {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 20px;
 }
 
 .recruiter-cancel-button {
-  border: 1px solid #d1d5db;
-  border-radius: 7px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   padding: 10px 16px;
   background: white;
+  color: var(--text-primary);
   cursor: pointer;
   font-weight: 600;
 }
 
-/* Empty state */
-
-.recruiter-empty-state {
-  background: white;
-  border: 1px dashed #d1d5db;
-  border-radius: 12px;
-  padding: 45px 20px;
-  text-align: center;
-  color: #6b7280;
+.recruiter-cancel-button:hover:not(:disabled) {
+  background: #f9fafb;
 }
 
-/* Responsive */
 
-@media (max-width: 800px) {
+/* ---------- Empty State ---------- */
+
+.recruiter-empty-state {
+  padding: 50px 20px;
+  background: white;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-lg);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.recruiter-empty-state p:first-child {
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   Application Status
+   ========================================================= */
+
+.application-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.application-status::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.application-status.applied {
+  background: var(--info-light);
+  color: var(--info);
+}
+
+.application-status.shortlisted {
+  background: #f5f3ff;
+  color: #7c3aed;
+}
+
+.application-status.selected {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.application-status.rejected {
+  background: var(--danger-light);
+  color: var(--danger);
+}
+
+.application-status.scheduled {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.application-status.completed {
+  background: var(--success-light);
+  color: #166534;
+}
+
+.application-status.cancelled {
+  background: var(--danger-light);
+  color: #991b1b;
+}
+
+
+/* =========================================================
+   Responsive Design
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+  .recruiter-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .recruiter-action-grid {
+    grid-template-columns: 1fr;
+  }
+
   .recruiter-job-list {
     grid-template-columns: 1fr;
   }
@@ -257,9 +835,36 @@ input {
   }
 }
 
-@media (max-width: 600px) {
+
+@media (max-width: 700px) {
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  .admin-dashboard,
+  .recruiter-dashboard,
   .recruiter-jobs-page {
-    padding: 20px 12px 35px;
+    width: min(100% - 24px, 1100px);
+    padding-bottom: 35px;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .application-filters {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-dashboard input,
+  .admin-dashboard select,
+  .admin-dashboard textarea {
+    width: 100%;
   }
 
   .recruiter-jobs-header {
@@ -281,148 +886,324 @@ input {
   .recruiter-cancel-button {
     width: 100%;
   }
+
+  .recruiter-stats-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-/* ================================
-   Application Status
-   ================================ */
 
-.application-status {
-  display: inline-block;
-  padding: 4px 9px;
-  border-radius: 999px;
-  font-size: 12px;
+@media (max-width: 480px) {
+
+  .section-card,
+  .recruiter-job-form,
+  .recruiter-job-card {
+    padding: 18px;
+  }
+
+  .recruiter-dashboard,
+  .recruiter-jobs-page {
+    padding-top: 20px;
+  }
+}
+
+/* =========================================================
+   Navbar
+   ========================================================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  min-height: 72px;
+  padding: 12px 32px;
+
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--border);
+
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+
+  backdrop-filter: blur(12px);
+}
+
+
+/* ---------- Brand ---------- */
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  flex-shrink: 0;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 10px;
+
+  background: var(--primary);
+  color: white;
+
+  font-size: 19px;
+  font-weight: 800;
+
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.20);
+}
+
+.navbar-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.navbar-title {
+  color: var(--text-primary);
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.2px;
+}
+
+.navbar-subtitle {
+  margin-top: 2px;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1px;
+}
+
+
+/* ---------- Navigation Content ---------- */
+
+.navbar-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.navbar-link {
+  padding: 8px 12px;
+
+  background: transparent;
+  color: var(--text-secondary);
+
+  border-radius: var(--radius-sm);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.navbar-link:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+
+/* ---------- Divider ---------- */
+
+.navbar-divider {
+  width: 1px;
+  height: 30px;
+  margin: 0 6px;
+
+  background: var(--border);
+}
+
+
+/* ---------- User ---------- */
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 4px 8px 4px 4px;
+}
+
+.navbar-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  background: var(--primary-light);
+  color: var(--primary);
+
+  font-size: 14px;
   font-weight: 700;
 }
 
-.application-status.applied {
-  background-color: #e5e7eb;
-  color: #374151;
-}
-
-.application-status.shortlisted {
-  background-color: #fef3c7;
-  color: #92400e;
-}
-
-.application-status.selected {
-  background-color: #dcfce7;
-  color: #166534;
-}
-
-.application-status.rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
-
-/* ================================
-   Recruiter Dashboard
-   ================================ */
-
-.recruiter-dashboard {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 30px 20px 50px;
-}
-
-.recruiter-dashboard-header {
-  margin-bottom: 30px;
-}
-
-.recruiter-dashboard-header h1 {
-  margin-bottom: 6px;
-}
-
-.recruiter-dashboard-header p {
-  color: #6b7280;
-}
-
-.recruiter-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.recruiter-stat-card {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 22px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.recruiter-stat-icon {
-  font-size: 28px;
-}
-
-.recruiter-stat-card p {
-  margin-bottom: 5px;
-  color: #6b7280;
-  font-size: 14px;
-}
-
-.recruiter-stat-card h2 {
-  font-size: 28px;
-}
-
-.recruiter-quick-actions {
-  margin-top: 35px;
-}
-
-.recruiter-quick-actions h2 {
-  margin-bottom: 18px;
-}
-
-.recruiter-action-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.recruiter-action-grid a {
+.navbar-user-info {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+
+  line-height: 1.25;
+}
+
+.navbar-user-info strong {
+  max-width: 130px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.navbar-user-info span {
+  margin-top: 2px;
+
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+
+/* ---------- Logout ---------- */
+
+.navbar-logout {
+  padding: 8px 13px;
+
   background: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 22px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  color: var(--text-secondary);
+
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
 }
 
-.recruiter-action-grid a:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.08);
+.navbar-logout:hover {
+  background: var(--danger-light);
+  color: var(--danger);
+  border-color: #fecaca;
 }
 
-.recruiter-action-grid strong {
-  font-size: 17px;
-}
 
-.recruiter-action-grid span {
-  color: #6b7280;
-  font-size: 14px;
-}
+/* =========================================================
+   Navbar Responsive
+   ========================================================= */
 
 @media (max-width: 900px) {
-  .recruiter-stats-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  .navbar {
+    padding: 12px 20px;
   }
 
-  .recruiter-action-grid {
-    grid-template-columns: 1fr;
+  .navbar-subtitle {
+    display: none;
+  }
+
+  .navbar-user-info {
+    display: none;
+  }
+
+  .navbar-divider {
+    display: none;
   }
 }
 
-@media (max-width: 600px) {
-  .recruiter-dashboard {
-    padding: 20px 12px 35px;
+
+@media (max-width: 700px) {
+
+  .navbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+
+    padding: 12px 16px;
   }
 
-  .recruiter-stats-grid {
-    grid-template-columns: 1fr;
+  .navbar-content {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .navbar-links {
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  .navbar-link {
+    padding: 7px 10px;
+    font-size: 13px;
+  }
+
+  .navbar-user {
+    display: none;
+  }
+
+  .navbar-logout {
+    margin-left: auto;
+  }
+}
+
+
+@media (max-width: 480px) {
+
+  .navbar {
+    min-height: auto;
+  }
+
+  .navbar-title {
+    font-size: 18px;
+  }
+
+  .navbar-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .navbar-content {
+    align-items: center;
+  }
+
+  .navbar-links {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+
+  .navbar-link {
+    flex-shrink: 0;
+  }
+
+  .navbar-logout {
+    flex-shrink: 0;
   }
 }
