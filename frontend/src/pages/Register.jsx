@@ -9,11 +9,11 @@ function Register() {
     name: "",
     email: "",
     password: "",
-    role: "STUDENT",
   });
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -29,12 +29,10 @@ function Register() {
 
     setError("");
     setSuccess("");
+    setLoading(true);
 
     try {
-      await api.post(
-        "/auth/register",
-        formData
-      );
+      await api.post("/auth/register", formData);
 
       setSuccess(
         "Registration successful! Redirecting to login..."
@@ -43,104 +41,127 @@ function Register() {
       setTimeout(() => {
         navigate("/login");
       }, 1500);
-
     } catch (error) {
       console.error("Registration failed:", error);
 
       setError(
         error.response?.data?.message ||
-        "Registration failed. Please try again."
+          "Registration failed. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h1>Create PlaceSync Account</h1>
+    <main className="auth-page">
+      <div className="auth-card">
 
-      {error && (
-        <p>{error}</p>
-      )}
+        <div className="auth-brand">
+          <div className="auth-logo">P</div>
 
-      {success && (
-        <p>{success}</p>
-      )}
+          <h1>Create your account</h1>
 
-      <form onSubmit={handleSubmit}>
-
-        <div>
-          <label>Name</label>
-          <br />
-
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
+          <p>
+            Join PlaceSync and manage your placement journey.
+          </p>
         </div>
 
-        <br />
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
 
-        <div>
-          <label>Email</label>
-          <br />
+        {success && (
+          <div className="success-message">
+            {success}
+          </div>
+        )}
 
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
+          <div className="auth-form-group">
+            <label htmlFor="name">
+              Full name
+            </label>
 
-        <br />
+            <input
+              id="name"
+              type="text"
+              name="name"
+              placeholder="Enter your full name"
+              value={formData.name}
+              onChange={handleChange}
+              autoComplete="name"
+              required
+            />
+          </div>
 
-        <div>
-          <label>Password</label>
-          <br />
+          <div className="auth-form-group">
+            <label htmlFor="email">
+              Email address
+            </label>
 
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            minLength="8"
-            required
-          />
-        </div>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              autoComplete="email"
+              required
+            />
+          </div>
 
-        <br />
+          <div className="auth-form-group">
+            <label htmlFor="password">
+              Password
+            </label>
 
-        <div>
-          <label>Role</label>
-          <br />
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              value={formData.password}
+              onChange={handleChange}
+              minLength="8"
+              autoComplete="new-password"
+              required
+            />
 
-          <select
-            name="role"
-            value={formData.role}
-            onChange={handleChange}
+            <span className="auth-helper-text">
+              Password must contain at least 8 characters.
+            </span>
+          </div>
+
+          <button
+            className="auth-submit-button"
+            type="submit"
+            disabled={loading}
           >
-            <option value="STUDENT">
-              Student
-            </option>
+            {loading ? "Creating account..." : "Create account"}
+          </button>
+        </form>
 
-            <option value="ADMIN">
-              Admin
-            </option>
-          </select>
+        <div className="auth-footer">
+          <span>Already have an account?</span>
+
+          <button
+            type="button"
+            className="auth-link-button"
+            onClick={() => navigate("/login")}
+          >
+            Sign in
+          </button>
         </div>
 
-        <br />
-
-        <button type="submit">
-          Register
-        </button>
-
-      </form>
-    </div>
+      </div>
+    </main>
   );
 }
 

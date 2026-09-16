@@ -13,7 +13,6 @@ function Login() {
   });
 
   const [error, setError] = useState("");
-
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
@@ -26,83 +25,116 @@ function Login() {
   };
 
   const handleSubmit = async (event) => {
-  event.preventDefault();
+    event.preventDefault();
 
-  setError("");
-  setLoading(true);
+    setError("");
+    setLoading(true);
 
-  try {
-    const response = await api.post(
-      "/auth/login",
-      formData
-    );
+    try {
+      const response = await api.post("/auth/login", formData);
 
-    login(response.data);
+      login(response.data);
 
-    if (response.data.role === "ADMIN") {
-      navigate("/admin/dashboard");
-    } else if (response.data.role === "RECRUITER") {
-      navigate("/recruiter/dashboard");
-    } else {
-      navigate("/student/dashboard");
+      if (response.data.role === "ADMIN") {
+        navigate("/admin/dashboard");
+      } else if (response.data.role === "RECRUITER") {
+        navigate("/recruiter/dashboard");
+      } else {
+        navigate("/student/dashboard");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+
+      setError(
+        error.response?.data?.message ||
+          "Login failed. Please check your credentials."
+      );
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Login failed:", error);
-
-    setError(
-      error.response?.data?.message ||
-      "Login failed. Please check your credentials."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
-    <div>
-      <h1>PlaceSync Login</h1>
+    <main className="auth-page">
+      <div className="auth-card">
 
-      {error && (
-        <p>{error}</p>
-      )}
+        <div className="auth-brand">
+          <div className="auth-logo">P</div>
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
+          <h1>Welcome back</h1>
+
+          <p>
+            Sign in to continue to your PlaceSync account.
+          </p>
         </div>
 
-        <br />
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
+        )}
 
-        <div>
-          <label>Password</label>
-          <br />
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+        <form
+          className="auth-form"
+          onSubmit={handleSubmit}
+        >
+          <div className="auth-form-group">
+            <label htmlFor="email">
+              Email address
+            </label>
+
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              autoComplete="email"
+              required
+            />
+          </div>
+
+          <div className="auth-form-group">
+            <label htmlFor="password">
+              Password
+            </label>
+
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              autoComplete="current-password"
+              required
+            />
+          </div>
+
+          <button
+            className="auth-submit-button"
+            type="submit"
+            disabled={loading}
+          >
+            {loading ? "Signing in..." : "Sign in"}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <span>Don't have an account?</span>
+
+          <button
+            type="button"
+            className="auth-link-button"
+            onClick={() => navigate("/register")}
+          >
+            Create account
+          </button>
         </div>
 
-        <br />
-
-        <button
-  type="submit"
-  disabled={loading}
->
-  {loading ? "Logging in..." : "Login"}
-</button>
-      </form>
-    </div>
+      </div>
+    </main>
   );
 }
 
