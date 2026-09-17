@@ -300,51 +300,53 @@ function StudentJobs() {
                   {/* Actions */}
                   <div className="job-card-actions">
 
-                    <button
-                      className="secondary-button"
-                      onClick={() =>
-                        handleCheckEligibility(
-                          job.id
-                        )
-                      }
-                      disabled={
-                        checkingEligibility[job.id]
-                      }
-                    >
-                      {checkingEligibility[job.id]
-                        ? "Checking..."
-                        : "Check Eligibility"}
-                    </button>
+  {!application && (
+    <>
+      <button
+        className="secondary-button"
+        onClick={() =>
+          handleCheckEligibility(job.id)
+        }
+        disabled={
+          checkingEligibility[job.id]
+        }
+      >
+        {checkingEligibility[job.id]
+          ? "Checking..."
+          : "Check Eligibility"}
+      </button>
 
-                    {!application ? (
-                      <button
-                        className="primary-button"
-                        onClick={() =>
-                          handleApply(job.id)
-                        }
-                        disabled={
-                          applying[job.id] ||
-                          (eligibilityResult &&
-                            !eligibilityResult.eligible)
-                        }
-                      >
-                        {applying[job.id]
-                          ? "Applying..."
-                          : "Apply Now"}
-                      </button>
-                    ) : (
-                      <div className="job-application-status">
-                        <span>
-                          Application Status
-                        </span>
+      <button
+        className="primary-button"
+        onClick={() =>
+          handleApply(job.id)
+        }
+        disabled={
+          applying[job.id] ||
+          (eligibilityResult &&
+            !eligibilityResult.eligible)
+        }
+      >
+        {applying[job.id]
+          ? "Applying..."
+          : "Apply Now"}
+      </button>
+    </>
+  )}
 
-                        <StatusBadge
-                          status={application.status}
-                        />
-                      </div>
-                    )}
+  {application && (
+    <div className="job-application-status">
+      <span>
+        Application Status
+      </span>
 
-                  </div>
+      <StatusBadge
+        status={application.status}
+      />
+    </div>
+  )}
+
+</div>
 
                 </div>
               );

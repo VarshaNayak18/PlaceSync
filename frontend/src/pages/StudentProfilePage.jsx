@@ -194,6 +194,7 @@ function StudentProfilePage() {
     <main className="dashboard-page">
       <div className="dashboard-container">
 
+        {/* Page Header */}
         <div className="dashboard-header">
           <p className="dashboard-eyebrow">
             Student Portal
@@ -220,20 +221,19 @@ function StudentProfilePage() {
 
         {/* Create Profile */}
         {profileMissing && (
-          <div className="section-card">
+          <div className="section-card profile-card">
 
-            <div className="profile-completion-intro">
-              <div className="profile-completion-icon">
+            <div className="profile-card-heading">
+              <div className="profile-avatar profile-avatar-warning">
                 !
               </div>
 
               <div>
-                <h3>Complete your student profile</h3>
+                <h2>Complete Your Profile</h2>
 
                 <p>
                   Add your academic and contact details
-                  to access placement opportunities and
-                  check your eligibility.
+                  to start using the placement portal.
                 </p>
               </div>
             </div>
@@ -303,26 +303,27 @@ function StudentProfilePage() {
 
               </div>
 
-              <button
-                className="primary-button"
-                type="submit"
-                disabled={saving}
-              >
-                {saving
-                  ? "Creating Profile..."
-                  : "Create Profile"}
-              </button>
+              <div className="profile-actions">
+                <button
+                  className="primary-button"
+                  type="submit"
+                  disabled={saving}
+                >
+                  {saving
+                    ? "Creating Profile..."
+                    : "Create Profile"}
+                </button>
+              </div>
             </form>
           </div>
         )}
 
         {/* Existing Profile */}
         {!profileMissing && student && !editing && (
-          <div className="section-card">
+          <div className="section-card profile-card">
 
-            <div className="profile-page-header">
-
-              <div className="profile-page-avatar">
+            <div className="profile-card-heading">
+              <div className="profile-avatar">
                 {student.name
                   ?.charAt(0)
                   ?.toUpperCase() || "S"}
@@ -335,7 +336,6 @@ function StudentProfilePage() {
                   {student.department} • {student.usn}
                 </p>
               </div>
-
             </div>
 
             <div className="student-profile-details">
@@ -386,14 +386,13 @@ function StudentProfilePage() {
 
         {/* Edit Profile */}
         {!profileMissing && student && editing && (
-          <div className="section-card">
+          <div className="section-card profile-card">
 
             <div className="profile-form-header">
               <h2>Edit Profile</h2>
 
               <p>
-                Update your academic and contact
-                information.
+                Update your academic and contact information.
               </p>
             </div>
 
@@ -459,7 +458,6 @@ function StudentProfilePage() {
               </div>
 
               <div className="profile-actions">
-
                 <button
                   className="primary-button"
                   type="submit"
@@ -478,9 +476,9 @@ function StudentProfilePage() {
                 >
                   Cancel
                 </button>
-
               </div>
             </form>
+
           </div>
         )}
 
@@ -489,7 +487,6 @@ function StudentProfilePage() {
   );
 }
 
-/* Reusable input component */
 function ProfileInput({
   id,
   label,
@@ -522,7 +519,6 @@ function ProfileInput({
   );
 }
 
-/* Reusable profile detail component */
 function ProfileDetail({ label, value }) {
   return (
     <div className="profile-detail">

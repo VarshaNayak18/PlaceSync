@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getMyApplications } from "../services/applicationService";
+import StatusBadge from "../components/StatusBadge";
 
 function StudentApplications() {
   const [applications, setApplications] = useState([]);
@@ -10,8 +11,6 @@ function StudentApplications() {
     const fetchApplications = async () => {
       try {
         const data = await getMyApplications();
-
-        console.log("My applications:", data);
 
         setApplications(data);
       } catch (error) {
@@ -36,6 +35,7 @@ function StudentApplications() {
     <main className="dashboard-page">
       <div className="dashboard-container">
 
+        {/* Header */}
         <div className="dashboard-header">
           <p className="dashboard-eyebrow">
             Student Portal
@@ -44,67 +44,107 @@ function StudentApplications() {
           <h1>My Applications</h1>
 
           <p>
-            Track the jobs you have applied for.
+            Track the jobs you have applied for and
+            monitor your application status.
           </p>
         </div>
 
-        {loading && (
-          <div className="loading-message">
-            Loading your applications...
-          </div>
-        )}
-
+        {/* Error */}
         {error && (
           <div className="error-message">
             {error}
           </div>
         )}
 
+        {/* Loading */}
+        {loading && (
+          <div className="loading-message">
+            Loading your applications...
+          </div>
+        )}
+
+        {/* Empty State */}
         {!loading &&
           !error &&
           applications.length === 0 && (
             <div className="section-card">
-              <h2>No Applications Yet</h2>
+              <div className="empty-state">
+                <div className="empty-state-icon">
+                  📄
+                </div>
 
-              <p>
-                You haven't applied for any jobs yet.
-              </p>
+                <h3>No Applications Yet</h3>
+
+                <p>
+                  You haven't applied for any jobs yet.
+                  Explore available jobs to get started.
+                </p>
+              </div>
             </div>
           )}
 
+        {/* Applications */}
         {!loading &&
           !error &&
           applications.length > 0 && (
-            <div className="section-card">
+            <div className="applications-list">
 
-              <h2>Your Applications</h2>
+              {applications.map((application) => (
+                <div
+                  className="application-card"
+                  key={application.id}
+                >
 
-              <div className="applications-list">
+                  <div className="application-card-header">
 
-                {applications.map((application) => (
-                  <div
-                    className="application-card"
-                    key={application.id}
-                  >
-                    <h3>
-                      {application.jobTitle ||
-                        "Job Application"}
-                    </h3>
+                    <div>
+                      <p className="application-label">
+                        Job Application
+                      </p>
 
-                    <p>
-                      <strong>Company:</strong>{" "}
-                      {application.companyName ||
-                        "Not specified"}
-                    </p>
+                      <h2>
+                        {application.jobTitle ||
+                          "Job Application"}
+                      </h2>
 
-                    <p>
-                      <strong>Status:</strong>{" "}
-                      {application.status}
-                    </p>
+                      <p className="application-company">
+                        {application.companyName ||
+                          "Company not specified"}
+                      </p>
+                    </div>
+
+                    <StatusBadge
+                      status={application.status}
+                    />
+
                   </div>
-                ))}
 
-              </div>
+                  <div className="application-details">
+
+                    <div className="application-detail">
+                      <span>Applied On</span>
+
+                      <strong>
+                        {application.appliedAt
+                          ? new Date(
+                              application.appliedAt
+                            ).toLocaleDateString()
+                          : "Not available"}
+                      </strong>
+                    </div>
+
+                    <div className="application-detail">
+                      <span>Status</span>
+
+                      <strong>
+                        {application.status}
+                      </strong>
+                    </div>
+
+                  </div>
+
+                </div>
+              ))}
 
             </div>
           )}

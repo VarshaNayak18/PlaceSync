@@ -13,6 +13,8 @@ function Navbar() {
   };
 
   const goToDashboard = () => {
+    setStudentMenuOpen(false);
+
     if (user?.role === "ADMIN") {
       navigate("/admin/dashboard");
     } else if (user?.role === "RECRUITER") {
@@ -22,28 +24,15 @@ function Navbar() {
     }
   };
 
-  const scrollToStudentSection = (sectionId) => {
+  const navigateStudent = (path) => {
     setStudentMenuOpen(false);
-
-    if (window.location.pathname !== "/student/dashboard") {
-      navigate("/student/dashboard");
-
-      setTimeout(() => {
-        document.getElementById(sectionId)?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }, 100);
-    } else {
-      document.getElementById(sectionId)?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
+    navigate(path);
   };
 
   return (
     <nav className="navbar">
+
+      {/* Brand */}
       <div
         className="navbar-brand"
         onClick={goToDashboard}
@@ -71,6 +60,7 @@ function Navbar() {
           {/* Recruiter Navigation */}
           {user.role === "RECRUITER" && (
             <div className="navbar-links">
+
               <button
                 className="navbar-link"
                 onClick={() => navigate("/recruiter/jobs")}
@@ -80,14 +70,18 @@ function Navbar() {
 
               <button
                 className="navbar-link"
-                onClick={() => navigate("/recruiter/applications")}
+                onClick={() =>
+                  navigate("/recruiter/applications")
+                }
               >
                 Applications
               </button>
 
               <button
                 className="navbar-link"
-                onClick={() => navigate("/recruiter/interviews")}
+                onClick={() =>
+                  navigate("/recruiter/interviews")
+                }
               >
                 Interviews
               </button>
@@ -98,30 +92,35 @@ function Navbar() {
               >
                 Dashboard
               </button>
+
             </div>
           )}
 
           {/* Admin Navigation */}
           {user.role === "ADMIN" && (
             <div className="navbar-links">
+
               <button
                 className="navbar-link"
                 onClick={goToDashboard}
               >
                 Dashboard
               </button>
+
             </div>
           )}
 
           {/* Student Navigation */}
           {user.role === "STUDENT" && (
             <div className="navbar-links">
+
               <button
                 className="navbar-link"
                 onClick={goToDashboard}
               >
                 Dashboard
               </button>
+
             </div>
           )}
 
@@ -129,11 +128,15 @@ function Navbar() {
 
           {/* User Menu */}
           <div className="navbar-user-menu">
+
             <button
+              type="button"
               className="navbar-user"
               onClick={() => {
                 if (user.role === "STUDENT") {
-                  setStudentMenuOpen((previous) => !previous);
+                  setStudentMenuOpen(
+                    (previous) => !previous
+                  );
                 }
               }}
             >
@@ -141,55 +144,82 @@ function Navbar() {
                 {user.name?.charAt(0)?.toUpperCase() || "U"}
               </div>
 
-              <div className="navbar-user-info">
-                <strong>{user.name}</strong>
-                <span>{user.role}</span>
-              </div>
-
               {user.role === "STUDENT" && (
-                <span className="navbar-dropdown-arrow">
-                  {studentMenuOpen ? "▲" : "▼"}
+                <span className="student-dropdown-arrow">
+                  ▼
                 </span>
+              )}
+
+              {user.role !== "STUDENT" && (
+                <div className="navbar-user-info">
+                  <strong>{user.name}</strong>
+                  <span>{user.role}</span>
+                </div>
               )}
             </button>
 
-            <button
-  onClick={() => {
-    setStudentMenuOpen(false);
-    navigate("/student/profile");
-  }}
->
-  <span>👤</span>
-  Profile
-</button>
+            {/* Student Dropdown */}
+            {user.role === "STUDENT" &&
+              studentMenuOpen && (
+                <div className="student-nav-menu">
 
-<button
-  onClick={() => {
-    setStudentMenuOpen(false);
-    navigate("/student/jobs");
-  }}
->
-  <span>💼</span>
-  Available Jobs
-</button>
+                  <button
+                    type="button"
+                    className="student-nav-item"
+                    onClick={() =>
+                      navigateStudent("/student/profile")
+                    }
+                  >
+                    <span className="student-nav-icon">
+                      👤
+                    </span>
 
-<button
-  onClick={() => {
-    setStudentMenuOpen(false);
-    navigate("/student/applications");
-  }}
->
-  <span>📄</span>
-  Applications
-</button>
+                    <span>Profile</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="student-nav-item"
+                    onClick={() =>
+                      navigateStudent("/student/jobs")
+                    }
+                  >
+                    <span className="student-nav-icon">
+                      💼
+                    </span>
+
+                    <span>Available Jobs</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    className="student-nav-item"
+                    onClick={() =>
+                      navigateStudent(
+                        "/student/applications"
+                      )
+                    }
+                  >
+                    <span className="student-nav-icon">
+                      📄
+                    </span>
+
+                    <span>Applications</span>
+                  </button>
+
+                </div>
+              )}
+
           </div>
 
+          {/* Logout */}
           <button
             className="navbar-logout"
             onClick={handleLogout}
           >
             Logout
           </button>
+
         </div>
       )}
     </nav>
