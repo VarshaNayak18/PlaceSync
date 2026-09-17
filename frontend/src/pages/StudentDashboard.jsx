@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  createStudentProfile,
   getStudentProfile,
   updateStudentProfile,
 } from "../services/studentService";
@@ -11,13 +12,16 @@ import {
 } from "../services/applicationService";
 import StatusBadge from "../components/StatusBadge";
 import SectionCard from "../components/SectionCard";
+import { useAuth } from "../context/AuthContext";
 
 function StudentDashboard() {
+  const { user } = useAuth();
   const [student, setStudent] = useState(null);
-  const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
 
-  const [editing, setEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
+const [profileMissing, setProfileMissing] = useState(false);
+const [editing, setEditing] = useState(false);
+const [saving, setSaving] = useState(false);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -64,16 +68,21 @@ function StudentDashboard() {
           phoneNumber: data.phoneNumber,
         });
       } catch (error) {
-        console.error(
-          "Failed to fetch student profile:",
-          error
-        );
+  console.error(
+    "Failed to fetch student profile:",
+    error
+  );
 
-        setError(
-          error.response?.data?.message ||
-          "Failed to load student profile."
-        );
-      } finally {
+  if (error.response?.status === 404) {
+    setProfileMissing(true);
+    setError("");
+  } else {
+    setError(
+      error.response?.data?.message ||
+      "Failed to load student profile."
+    );
+  }
+} finally {
         setLoading(false);
       }
     };
@@ -111,13 +120,14 @@ useEffect(() => {
       const data = await getMyApplications();
 
       setMyApplications(data);
+
       const applicationMap = {};
 
-data.forEach((application) => {
-  applicationMap[application.jobId] = application;
-});
+      data.forEach((application) => {
+        applicationMap[application.jobId] = application;
+      });
 
-setApplications(applicationMap);
+      setApplications(applicationMap);
     } catch (error) {
       console.error(
         "Failed to fetch applications:",
@@ -126,7 +136,7 @@ setApplications(applicationMap);
 
       setApplicationsError(
         error.response?.data?.message ||
-        "Failed to load your applications."
+          "Failed to load your applications."
       );
     } finally {
       setApplicationsLoading(false);
@@ -135,6 +145,16 @@ setApplications(applicationMap);
 
   fetchMyApplications();
 }, []);
+
+useEffect(() => {
+  if (user && profileMissing) {
+    setFormData((previous) => ({
+      ...previous,
+      name: previous.name || user.name || "",
+      email: previous.email || user.email || "",
+    }));
+  }
+}, [user, profileMissing]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -165,6 +185,50 @@ setApplications(applicationMap);
     setSuccess("");
     setEditing(false);
   };
+
+  const handleCreateProfile = async (event) => {
+  event.preventDefault();
+
+  setError("");
+  setSuccess("");
+  setSaving(true);
+
+  try {
+    const createdStudent = await createStudentProfile({
+      ...formData,
+      cgpa: Number(formData.cgpa),
+    });
+
+    setStudent(createdStudent);
+    setProfileMissing(false);
+    setEditing(false);
+
+    setFormData({
+      name: createdStudent.name,
+      email: createdStudent.email,
+      usn: createdStudent.usn,
+      department: createdStudent.department,
+      cgpa: createdStudent.cgpa,
+      phoneNumber: createdStudent.phoneNumber,
+    });
+
+    setSuccess(
+      "Profile created successfully."
+    );
+  } catch (error) {
+    console.error(
+      "Failed to create student profile:",
+      error
+    );
+
+    setError(
+      error.response?.data?.message ||
+      "Failed to create profile."
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -326,171 +390,312 @@ const handleApply = async (jobId) => {
           <p>{success}</p>
         )}
 
-        {!loading && !error && student && (
-          <SectionCard title="Your Profile">
+        {!loading && !error && profileMissing && (
+  <SectionCard title="Complete Your Profile">
 
-            {!editing ? (
-              <>
-                <div
-  style={{
-    display: "grid",
-    gridTemplateColumns:
-      "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "16px",
-  }}
->
-  <div>
-    <strong>Name</strong>
-    <p>{student.name}</p>
-  </div>
+    <div className="profile-completion-intro">
+      <div className="profile-completion-icon">
+        !
+      </div>
 
-  <div>
-    <strong>Email</strong>
-    <p>{student.email}</p>
-  </div>
+      <div>
+        <h3>Complete your student profile</h3>
 
-  <div>
-    <strong>USN</strong>
-    <p>{student.usn}</p>
-  </div>
+        <p>
+          Add your academic and contact details to
+          access placement opportunities and check
+          your eligibility.
+        </p>
+      </div>
+    </div>
 
-  <div>
-    <strong>Department</strong>
-    <p>{student.department}</p>
-  </div>
+    <form
+      className="student-profile-form"
+      onSubmit={handleCreateProfile}
+    >
 
-  <div>
-    <strong>CGPA</strong>
-    <p>{student.cgpa}</p>
-  </div>
+      <div className="student-profile-form-grid">
 
-  <div>
-    <strong>Phone</strong>
-    <p>{student.phoneNumber}</p>
-  </div>
-</div>
+        <div className="student-form-group">
+          <label htmlFor="profile-name">
+            Full Name
+          </label>
 
-                <button onClick={handleEdit}>
-                  Edit Profile
-                </button>
-              </>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div>
-                  <label>Name</label>
-                  <br />
+          <input
+            id="profile-name"
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+        <div className="student-form-group">
+          <label htmlFor="profile-email">
+            Email
+          </label>
 
-                <br />
+          <input
+            id="profile-email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-                <div>
-                  <label>Email</label>
-                  <br />
+        <div className="student-form-group">
+          <label htmlFor="profile-usn">
+            USN
+          </label>
 
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+          <input
+            id="profile-usn"
+            type="text"
+            name="usn"
+            placeholder="e.g. 1PL23CS001"
+            value={formData.usn}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-                <br />
+        <div className="student-form-group">
+          <label htmlFor="profile-department">
+            Department
+          </label>
 
-                <div>
-                  <label>USN</label>
-                  <br />
+          <input
+            id="profile-department"
+            type="text"
+            name="department"
+            placeholder="e.g. CSE"
+            value={formData.department}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-                  <input
-                    type="text"
-                    name="usn"
-                    value={formData.usn}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+        <div className="student-form-group">
+          <label htmlFor="profile-cgpa">
+            CGPA
+          </label>
 
-                <br />
+          <input
+            id="profile-cgpa"
+            type="number"
+            name="cgpa"
+            min="0"
+            max="10"
+            step="0.01"
+            placeholder="e.g. 8.75"
+            value={formData.cgpa}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-                <div>
-                  <label>Department</label>
-                  <br />
+        <div className="student-form-group">
+          <label htmlFor="profile-phone">
+            Phone Number
+          </label>
 
-                  <input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+          <input
+            id="profile-phone"
+            type="text"
+            name="phoneNumber"
+            placeholder="10-digit phone number"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-                <br />
+      </div>
 
-                <div>
-                  <label>CGPA</label>
-                  <br />
+      <button
+        className="student-profile-save-button"
+        type="submit"
+        disabled={saving}
+      >
+        {saving
+          ? "Creating profile..."
+          : "Create Profile"}
+      </button>
 
-                  <input
-                    type="number"
-                    name="cgpa"
-                    value={formData.cgpa}
-                    onChange={handleChange}
-                    min="0"
-                    max="10"
-                    step="0.01"
-                    required
-                  />
-                </div>
+    </form>
 
-                <br />
+  </SectionCard>
+)}
+{!loading && !error && student && (
+  <SectionCard title="Your Profile">
 
-                <div>
-                  <label>Phone Number</label>
-                  <br />
+    {!editing ? (
+      <>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns:
+              "repeat(auto-fit, minmax(220px, 1fr))",
+            gap: "16px",
+          }}
+        >
+          <div>
+            <strong>Name</strong>
+            <p>{student.name}</p>
+          </div>
 
-                  <input
-                    type="text"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
+          <div>
+            <strong>Email</strong>
+            <p>{student.email}</p>
+          </div>
 
-                <br />
+          <div>
+            <strong>USN</strong>
+            <p>{student.usn}</p>
+          </div>
 
-                <button
-                  type="submit"
-                  disabled={saving}
-                >
-                  {saving
-                    ? "Saving..."
-                    : "Save Changes"}
-                </button>
+          <div>
+            <strong>Department</strong>
+            <p>{student.department}</p>
+          </div>
 
-                {" "}
+          <div>
+            <strong>CGPA</strong>
+            <p>{student.cgpa}</p>
+          </div>
 
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  disabled={saving}
-                >
-                  Cancel
-                </button>
-              </form>
-            )}
-          </SectionCard>
-        )}
+          <div>
+            <strong>Phone</strong>
+            <p>{student.phoneNumber}</p>
+          </div>
+        </div>
+
+        <button onClick={handleEdit}>
+          Edit Profile
+        </button>
+      </>
+    ) : (
+      <form onSubmit={handleSubmit}>
+
+        <div>
+          <label>Name</label>
+          <br />
+
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <br />
+
+        <div>
+          <label>Email</label>
+          <br />
+
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <br />
+
+        <div>
+          <label>USN</label>
+          <br />
+
+          <input
+            type="text"
+            name="usn"
+            value={formData.usn}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <br />
+
+        <div>
+          <label>Department</label>
+          <br />
+
+          <input
+            type="text"
+            name="department"
+            value={formData.department}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <br />
+
+        <div>
+          <label>CGPA</label>
+          <br />
+
+          <input
+            type="number"
+            name="cgpa"
+            value={formData.cgpa}
+            onChange={handleChange}
+            min="0"
+            max="10"
+            step="0.01"
+            required
+          />
+        </div>
+
+        <br />
+
+        <div>
+          <label>Phone Number</label>
+          <br />
+
+          <input
+            type="text"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <br />
+
+        <button
+          type="submit"
+          disabled={saving}
+        >
+          {saving ? "Saving..." : "Save Changes"}
+        </button>
+
+        {" "}
+
+        <button
+          type="button"
+          onClick={handleCancel}
+          disabled={saving}
+        >
+          Cancel
+        </button>
+
+      </form>
+    )}
+
+  </SectionCard>
+)}
+            
 <SectionCard title="Available Jobs">
 
   {jobsLoading && (

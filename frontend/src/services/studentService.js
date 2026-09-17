@@ -1,5 +1,14 @@
 import api from "./api";
 
+export const createStudentProfile = async (profileData) => {
+  const response = await api.post(
+    "/students/profile",
+    profileData
+  );
+
+  return response.data;
+};
+
 export const getStudentProfile = async () => {
   const response = await api.get("/students/profile");
 
