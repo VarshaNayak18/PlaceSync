@@ -5,15 +5,21 @@ import { useAuth } from "../context/AuthContext";
 function Navbar() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
-  const [studentMenuOpen, setStudentMenuOpen] = useState(false);
+
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const navigateUser = (path) => {
+    setUserMenuOpen(false);
+    navigate(path);
+  };
+
   const goToDashboard = () => {
-    setStudentMenuOpen(false);
+    setUserMenuOpen(false);
 
     if (user?.role === "ADMIN") {
       navigate("/admin/dashboard");
@@ -22,11 +28,6 @@ function Navbar() {
     } else {
       navigate("/student/dashboard");
     }
-  };
-
-  const navigateStudent = (path) => {
-    setStudentMenuOpen(false);
-    navigate(path);
   };
 
   return (
@@ -98,17 +99,55 @@ function Navbar() {
 
           {/* Admin Navigation */}
           {user.role === "ADMIN" && (
-            <div className="navbar-links">
+  <div className="navbar-links">
 
-              <button
-                className="navbar-link"
-                onClick={goToDashboard}
-              >
-                Dashboard
-              </button>
+    <button
+      className="navbar-link"
+      onClick={() =>
+        navigate("/admin/dashboard?section=overview")
+      }
+    >
+      Dashboard
+    </button>
 
-            </div>
-          )}
+    <button
+      className="navbar-link"
+      onClick={() =>
+        navigate("/admin/dashboard?section=companies")
+      }
+    >
+      Companies
+    </button>
+
+    <button
+      className="navbar-link"
+      onClick={() =>
+        navigate("/admin/dashboard?section=jobs")
+      }
+    >
+      Jobs
+    </button>
+
+    <button
+      className="navbar-link"
+      onClick={() =>
+        navigate("/admin/dashboard?section=applications")
+      }
+    >
+      Applications
+    </button>
+
+    <button
+      className="navbar-link"
+      onClick={() =>
+        navigate("/admin/dashboard?section=interviews")
+      }
+    >
+      Interviews
+    </button>
+
+  </div>
+)}
 
           {/* Student Navigation */}
           {user.role === "STUDENT" && (
@@ -134,40 +173,44 @@ function Navbar() {
               className="navbar-user"
               onClick={() => {
                 if (user.role === "STUDENT") {
-                  setStudentMenuOpen(
+                  setUserMenuOpen(
                     (previous) => !previous
                   );
                 }
               }}
             >
+
               <div className="navbar-avatar">
                 {user.name?.charAt(0)?.toUpperCase() || "U"}
               </div>
 
+              {/* Student gets dropdown arrow */}
               {user.role === "STUDENT" && (
                 <span className="student-dropdown-arrow">
                   ▼
                 </span>
               )}
 
+              {/* Admin and Recruiter show user information */}
               {user.role !== "STUDENT" && (
                 <div className="navbar-user-info">
                   <strong>{user.name}</strong>
                   <span>{user.role}</span>
                 </div>
               )}
+
             </button>
 
-            {/* Student Dropdown */}
+            {/* Student Dropdown ONLY */}
             {user.role === "STUDENT" &&
-              studentMenuOpen && (
+              userMenuOpen && (
                 <div className="student-nav-menu">
 
                   <button
                     type="button"
                     className="student-nav-item"
                     onClick={() =>
-                      navigateStudent("/student/profile")
+                      navigateUser("/student/profile")
                     }
                   >
                     <span className="student-nav-icon">
@@ -181,7 +224,7 @@ function Navbar() {
                     type="button"
                     className="student-nav-item"
                     onClick={() =>
-                      navigateStudent("/student/jobs")
+                      navigateUser("/student/jobs")
                     }
                   >
                     <span className="student-nav-icon">
@@ -195,7 +238,7 @@ function Navbar() {
                     type="button"
                     className="student-nav-item"
                     onClick={() =>
-                      navigateStudent(
+                      navigateUser(
                         "/student/applications"
                       )
                     }

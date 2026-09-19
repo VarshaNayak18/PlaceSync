@@ -1,47 +1,28 @@
-function AdminSectionNav() {
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-
-    if (section) {
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  };
+function AdminSectionNav({ activeSection, onSectionChange }) {
+  const sections = [
+    { id: "overview", label: "Overview" },
+    { id: "companies", label: "Companies" },
+    { id: "jobs", label: "Jobs" },
+    { id: "applications", label: "Applications" },
+    { id: "interviews", label: "Interviews" },
+  ];
 
   return (
-    <div
-      style={{
-        display: "flex",
-        gap: "10px",
-        flexWrap: "wrap",
-        marginBottom: "24px",
-        padding: "12px",
-        backgroundColor: "#ffffff",
-        borderRadius: "10px",
-        border: "1px solid #e5e7eb",
-      }}
-    >
-      <button onClick={() => scrollToSection("overview")}>
-        Overview
-      </button>
-
-      <button onClick={() => scrollToSection("companies")}>
-        Companies
-      </button>
-
-      <button onClick={() => scrollToSection("jobs")}>
-        Jobs
-      </button>
-
-      <button onClick={() => scrollToSection("applications")}>
-        Applications
-      </button>
-
-      <button onClick={() => scrollToSection("interviews")}>
-        Interviews
-      </button>
+    <div className="admin-section-nav">
+      {sections.map((section) => (
+        <button
+          key={section.id}
+          type="button"
+          className={
+            activeSection === section.id
+              ? "admin-section-nav-active"
+              : ""
+          }
+          onClick={() => onSectionChange(section.id)}
+        >
+          {section.label}
+        </button>
+      ))}
     </div>
   );
 }
